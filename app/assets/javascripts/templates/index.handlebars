@@ -1,0 +1,14 @@
+{{#each tweet in controller}}
+  <p>{{tweet.text}} (Dirty: {{tweet.isDirty}})</p>
+
+  {{#each time in tweet.times}}
+    <div>
+      {{view TweetPoster.HourSelect valueBinding=time.hour}}
+      {{view TweetPoster.MinuteSelect valueBinding=time.minute}}
+      {{view TweetPoster.AmPmSelect valueBinding=time.meridian}}
+      {{view TweetPoster.TimeZoneSelect valueBinding=time.zone}}
+    </div>
+  {{/each}}
+
+  <button {{action 'addTime' tweet}}>Add Another Time</button>
+{{/each}}
