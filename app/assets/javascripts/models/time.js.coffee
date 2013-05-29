@@ -1,4 +1,5 @@
 TweetPoster.Time = DS.Model.extend
+  date: DS.attr('date')
   hour: DS.attr('number')
   minute: DS.attr('number')
   meridian: DS.attr('string')

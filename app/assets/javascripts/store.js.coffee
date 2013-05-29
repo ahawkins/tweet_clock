@@ -1,54 +1,38 @@
-TweetPoster.FixtureSerializer = DS.FixtureSerializer.extend
-  extractEmbeddedData: (hash, key) ->
-    hash[key]
-
-TweetPoster.FixtureAdapter = DS.FixtureAdapter.extend
-  serializer: TweetPoster.FixtureSerializer
+TweetPoster.FixtureAdapter = DS.FixtureAdapter.extend()
 
 TweetPoster.Store = DS.Store.extend
   adapter: TweetPoster.FixtureAdapter
-
-TweetPoster.FixtureAdapter.map TweetPoster.Tweet,
-  times: { embedded: 'always' }
 
 TweetPoster.Tweet.FIXTURES = [
   {
     id: '1',
     text: 'tweet 1',
-    times: [
-      { hour: 9, minute: 30, merdian: 'AM', offsset: -8 }
-      { hour: 8, minute: 15, merdian: 'PM', offsset: 0 }
-    ]
+    times: ['1', '2']
   },
   {
     id: '2',
     text: 'tweet 2',
-    times: [
-      { hour: 9, minute: 30, merdian: 'AM', offsset: -8 }
-      { hour: 8, minute: 15, merdian: 'PM', offsset: 0 }
-    ]
+    times: ['3', '4']
   },
   {
     id: '3',
     text: 'tweet 3',
-    times: [
-      { hour: 9, minute: 30, merdian: 'AM', offsset: -8 }
-      { hour: 8, minute: 15, merdian: 'PM', offsset: 0 }
-    ]
+    times: ['5', '6']
   },
   {
     id: '4',
     text: 'tweet 4',
-    times: [
-      { hour: 9, minute: 30, merdian: 'AM', offsset: -8 }
-      { hour: 8, minute: 15, merdian: 'PM', offsset: 0 }
-    ]
+    times: ['7', '8']
   }
 ]
 
-# TweetPoster.Tweet.FIXTURES = []
-
-# tweet = TweetPoster.Tweet.createRecord text: 'tweet 1'
-# tweet.get('times').createRecord hour: 8, minute: 15, merdian: 'PM', offsset: 0
-
-# tweet.get('store').commit()
+TweetPoster.Time.FIXTURES = [
+  { id: '1', hour: 9, minute: 30, meridian: 'AM', offset: -8 }
+  { id: '2', hour: 8, minute: 15, meridian: 'PM', offset: 0 }
+  { id: '3', hour: 9, minute: 30, meridian: 'AM', offset: -8 }
+  { id: '4', hour: 8, minute: 15, meridian: 'PM', offset: 0 }
+  { id: '5', hour: 9, minute: 30, meridian: 'AM', offset: -8 }
+  { id: '6', hour: 8, minute: 15, meridian: 'PM', offset: 0 }
+  { id: '7', hour: 9, minute: 30, meridian: 'AM', offset: -8 }
+  { id: '8', hour: 8, minute: 15, meridian: 'PM', offset: 0 }
+]
