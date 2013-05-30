@@ -1,8 +1,8 @@
 {{#each tweet in controller itemController=tweetItem}}
-  {{#if tweet.isCompletelyLoaded}}
+  {{#unless tweet.isLoading}}
     <p>{{view TweetPoster.TweetTextArea valueBinding="tweet.text" disabledBinding="tweet.isDisabled"}} (Dirty: {{tweet.isDirty}})</p>
 
-    <p>{{input type="date" valueBinding="tweet.date" disabledBinding="tweet.isDisabled"}}</p>
+    {{view TweetPoster.DatePicker dateBinding="tweet.date" disabledBinding="tweet.isDisabled"}}
 
     {{#each time in tweet.times itemController=timeItem}}
       {{#unless time.isNew}}
@@ -14,12 +14,13 @@
 
           <button {{action 'removeTime' tweet time}} {{bindAttr disabled="tweet.isDisabled"}}>X</button>
 
-          {{tweet.date}}
           (Dirty: {{time.isDirty}})
         </div>
       {{/unless}}
     {{/each}}
 
     <button {{action 'addTime' tweet}} {{bindAttr disabled="tweet.isDisabled"}}>Add Another Time</button>
-  {{/if}}
+  {{/unless}}
 {{/each}}
+
+<button {{action addTweet}}>Add Tweet</button>

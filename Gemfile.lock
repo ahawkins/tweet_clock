@@ -121,6 +121,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_model_serializers (~> 0.8.0)
   coffee-rails (~> 3.2.1)
   ember-rails
   ember-source (= 1.0.0.rc4)

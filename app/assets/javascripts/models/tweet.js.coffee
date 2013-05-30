@@ -2,6 +2,10 @@ TweetPoster.Tweet = DS.Model.extend
   text: DS.attr('string')
   times: DS.hasMany('TweetPoster.Time')
 
-  isCompletelyLoaded: (->
-    !@get('isLoading') && @get('times.isLoaded')
-  ).property('isLoading', 'times.isLoaded')
+  date: ((key, value) ->
+    if(arguments.length == 2) 
+      @get('times').setEach 'date', value
+      value
+    else
+      @get('times.firstObject.date') || new Date()
+  ).property()
