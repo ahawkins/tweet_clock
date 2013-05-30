@@ -2,7 +2,7 @@
   {{#if tweet.isCompletelyLoaded}}
     <p>{{tweet.text}} (Dirty: {{tweet.isDirty}})</p>
 
-    <p>{{input type="text" valueBinding="tweet.date"}}</p>
+    <p>{{input type="date" valueBinding="tweet.date"}}</p>
 
     {{#each time in tweet.times itemController=timeItem}}
       <div>
@@ -13,6 +13,7 @@
 
         <a href="#" {{action 'removeTime' tweet time}}>X</a>
 
+        {{tweet.date}}
         (Dirty: {{time.isDirty}})
       </div>
     {{/each}}
