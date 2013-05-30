@@ -1,20 +1,22 @@
-{{#each tweet in controller}}
-  <p>{{tweet.text}} (Dirty: {{tweet.isDirty}})</p>
+{{#each tweet in controller itemController=tweetItem}}
+  {{#if tweet.isCompletelyLoaded}}
+    <p>{{tweet.text}} (Dirty: {{tweet.isDirty}})</p>
 
-  {{#each time in tweet.times}}
-    <div>
-      {{#unless time.isLoading}}
+    <p>{{input type="text" valueBinding="tweet.date"}}</p>
+
+    {{#each time in tweet.times itemController=timeItem}}
+      <div>
         {{view TweetPoster.HourSelect valueBinding=time.hour}}
         {{view TweetPoster.MinuteSelect valueBinding=time.minute}}
         {{view TweetPoster.AmPmSelect valueBinding=time.meridian}}
         {{view TweetPoster.TimeZoneSelect valueBinding=time.offset}}
 
         <a href="#" {{action 'removeTime' tweet time}}>X</a>
-      {{/unless}}
 
-      (Dirty: {{time.isDirty}})
-    </div>
-  {{/each}}
+        (Dirty: {{time.isDirty}})
+      </div>
+    {{/each}}
 
-  <button {{action 'addTime' tweet}}>Add Another Time</button>
+    <button {{action 'addTime' tweet}}>Add Another Time</button>
+  {{/if}}
 {{/each}}
