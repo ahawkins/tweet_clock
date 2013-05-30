@@ -19,7 +19,10 @@
 //= require_self
 //= require tweet_poster
 TweetPoster = Ember.Application.create({
-  rootElement: "#application"
+  rootElement: "#application",
+  customEvents: {
+    blur: 'blur'
+  }
 });
 
 //= require_tree .

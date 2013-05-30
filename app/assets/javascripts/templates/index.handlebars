@@ -1,15 +1,15 @@
 {{#each tweet in controller itemController=tweetItem}}
   {{#if tweet.isCompletelyLoaded}}
-    <p>{{tweet.text}} (Dirty: {{tweet.isDirty}})</p>
+    <p>{{view TweetPoster.TweetTextArea valueBinding="tweet.text" disabledBinding="tweet.isDisabled"}} (Dirty: {{tweet.isDirty}})</p>
 
-    <p>{{input type="date" valueBinding="tweet.date"}}</p>
+    <p>{{input type="date" valueBinding="tweet.date" disabledBinding="tweet.isDisabled"}}</p>
 
     {{#each time in tweet.times itemController=timeItem}}
       <div>
-        {{view TweetPoster.HourSelect valueBinding=time.hour}}
-        {{view TweetPoster.MinuteSelect valueBinding=time.minute}}
-        {{view TweetPoster.AmPmSelect valueBinding=time.meridian}}
-        {{view TweetPoster.TimeZoneSelect valueBinding=time.offset}}
+        {{view TweetPoster.HourSelect valueBinding=time.hour disabledBinding=tweet.isDisabled}}
+        {{view TweetPoster.MinuteSelect valueBinding=time.minute disabledBinding=tweet.isDisabled}}
+        {{view TweetPoster.AmPmSelect valueBinding=time.meridian disabledBinding=tweet.isDisabled}}
+        {{view TweetPoster.TimeZoneSelect valueBinding=time.offset disabledBinding=tweet.isDisabled}}
 
         <a href="#" {{action 'removeTime' tweet time}}>X</a>
 

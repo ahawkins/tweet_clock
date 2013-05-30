@@ -23,7 +23,9 @@ TweetPoster.TimeZoneSelect = FixedSelect.extend
   optionValuePath: 'content.offset'
   optionLabelPath: 'content.name'
 
-
-
 TweetPoster.AmPmSelect = Ember.Select.extend
   content: ['AM', 'PM']
+
+TweetPoster.TweetTextArea = Ember.TextArea.extend
+  blur: ->
+    @get('controller').finishedChangingText()
