@@ -5,19 +5,21 @@
     <p>{{input type="date" valueBinding="tweet.date" disabledBinding="tweet.isDisabled"}}</p>
 
     {{#each time in tweet.times itemController=timeItem}}
-      <div>
-        {{view TweetPoster.HourSelect valueBinding=time.hour disabledBinding=tweet.isDisabled}}
-        {{view TweetPoster.MinuteSelect valueBinding=time.minute disabledBinding=tweet.isDisabled}}
-        {{view TweetPoster.AmPmSelect valueBinding=time.meridian disabledBinding=tweet.isDisabled}}
-        {{view TweetPoster.TimeZoneSelect valueBinding=time.offset disabledBinding=tweet.isDisabled}}
+      {{#unless time.isNew}}
+        <div>
+          {{view TweetPoster.HourSelect valueBinding=time.hour disabledBinding=tweet.isDisabled}}
+          {{view TweetPoster.MinuteSelect valueBinding=time.minute disabledBinding=tweet.isDisabled}}
+          {{view TweetPoster.AmPmSelect valueBinding=time.meridian disabledBinding=tweet.isDisabled}}
+          {{view TweetPoster.TimeZoneSelect valueBinding=time.offset disabledBinding=tweet.isDisabled}}
 
-        <a href="#" {{action 'removeTime' tweet time}}>X</a>
+          <button {{action 'removeTime' tweet time}} {{bindAttr disabled="tweet.isDisabled"}}>X</button>
 
-        {{tweet.date}}
-        (Dirty: {{time.isDirty}})
-      </div>
+          {{tweet.date}}
+          (Dirty: {{time.isDirty}})
+        </div>
+      {{/unless}}
     {{/each}}
 
-    <button {{action 'addTime' tweet}}>Add Another Time</button>
+    <button {{action 'addTime' tweet}} {{bindAttr disabled="tweet.isDisabled"}}>Add Another Time</button>
   {{/if}}
 {{/each}}

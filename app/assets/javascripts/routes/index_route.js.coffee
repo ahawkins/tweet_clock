@@ -5,6 +5,8 @@ TweetPoster.IndexRoute = Ember.Route.extend
 
     removeTime: (tweet, time) ->
       tweet.get('times').removeObject time
+      # Commit here 
+      @get('store').commit()
 
   model: ->
     TweetPoster.Tweet.find()
