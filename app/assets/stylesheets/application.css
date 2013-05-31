@@ -11,3 +11,22 @@
  *= require_self
  *= require_tree .
  */
+
+.tweet select {
+  width: auto;
+}
+
+.tweet textarea {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* simply cuz I don't care to do it right */
+.tweet .delete-time {
+  position: relative;
+  top: -5px;
+}
+
+.date-picker {
+  width: auto;
+}

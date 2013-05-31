@@ -21,6 +21,9 @@ group :assets do
 end
 
 gem 'jquery-rails'
+
+gem "twitter-bootstrap-rails", '~> 2.2.6'
+
 gem 'ember-rails'
 gem 'ember-source', '1.0.0.rc4' # or the version you need
 gem 'handlebars-source', '1.0.0.rc4' # or the version you need

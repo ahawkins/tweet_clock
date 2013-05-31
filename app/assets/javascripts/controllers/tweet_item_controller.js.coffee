@@ -12,6 +12,10 @@ TweetPoster.TweetItemController = Ember.ObjectController.extend
   ).observes('date')
 
   remainingCharacters: (->
-    return unless @get('text')
+    return 140 unless @get('text')
     140 - @get('text').length
   ).property('text')
+
+  humanDate: (->
+    @get('date').toLocaleDateString()
+  ).property('date')

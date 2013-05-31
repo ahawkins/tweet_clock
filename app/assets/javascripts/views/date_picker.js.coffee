@@ -1,4 +1,6 @@
 TweetPoster.DatePicker = Ember.TextField.extend
+  classNames: ['date-picker']
+
   textToDateTransform: ((key, value) ->
     if arguments.length == 2
       if value && /\d{4}-\d{2}-\d{2}/.test(value)
@@ -24,5 +26,6 @@ TweetPoster.DatePicker = Ember.TextField.extend
   ).property()
 
   placeholder: "yyyy-mm-dd"
+  size: 8
 
   valueBinding: "textToDateTransform"
