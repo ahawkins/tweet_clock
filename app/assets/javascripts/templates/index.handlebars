@@ -1,6 +1,7 @@
 {{#each tweet in controller itemController=tweetItem}}
   {{#unless tweet.isLoading}}
     <p>{{view TweetPoster.TweetTextArea valueBinding="tweet.text" disabledBinding="tweet.isDisabled"}} (Dirty: {{tweet.isDirty}})</p>
+    <p>{{tweet.remainingCharacters}}</p>
 
     {{view TweetPoster.DatePicker dateBinding="tweet.date" disabledBinding="tweet.isDisabled"}}
 

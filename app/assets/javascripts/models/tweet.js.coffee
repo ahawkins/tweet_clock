@@ -4,7 +4,7 @@ TweetPoster.Tweet = DS.Model.extend
 
   date: ((key, value) ->
     if(arguments.length == 2) 
-      @get('times').setEach 'date', value
+      @get('times').setEach('date', value) if value
       value
     else
       @get('times.firstObject.date') || new Date()

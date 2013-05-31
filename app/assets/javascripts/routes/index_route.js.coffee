@@ -6,7 +6,12 @@ TweetPoster.ApplicationRoute = Ember.Route.extend
 TweetPoster.IndexRoute = Ember.Route.extend
   events:
     addTime: (tweet) ->
-      tweet.get('times').createRecord date: tweet.get('date'), hour: 1, minute: 15, merdian: 'PM', offset: -8
+      tweet.get('times').createRecord 
+        date: tweet.get('date')
+        hour: 1
+        minute: 15
+        merdian: 'PM'
+        offset: -8
 
     removeTime: (tweet, time) ->
       tweet.get('times').removeObject time
@@ -15,7 +20,15 @@ TweetPoster.IndexRoute = Ember.Route.extend
 
     addTweet: ->
       transaction = @get('store').transaction()
+
       tweet = TweetPoster.Tweet.createRecord date: new Date()
+      tweet.get('times').createRecord 
+        date: tweet.get('date')
+        hour: 1 
+        minute: 15,
+        merdian: 'PM',
+        offset: -8
+
       transaction.add(tweet)
       transaction.commit()
 

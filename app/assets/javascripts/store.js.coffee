@@ -30,7 +30,7 @@ TweetPoster.RESTSerializer = DS.RESTSerializer.extend
       time.hour = hour - 12
       time.merdian = 'PM'
 
-    time.minutes = parseInt matches[5]
+    time.minute = parseInt matches[5]
     time.offset = parseInt matches[6]
     time
 
