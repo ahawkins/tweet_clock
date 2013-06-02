@@ -4,6 +4,9 @@ TweetPoster.ApplicationRoute = Ember.Route.extend
     TweetPoster.Tweet.find()
 
 TweetPoster.IndexRoute = Ember.Route.extend
+  redirect: -> @transitionTo 'tweets'
+
+TweetPoster.TweetsRoute = Ember.Route.extend
   events:
     addTime: (tweet) ->
       tweet.get('times').createRecord 

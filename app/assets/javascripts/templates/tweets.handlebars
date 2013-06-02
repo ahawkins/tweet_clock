@@ -1,0 +1,56 @@
+<div class="container">
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="navbar-padded">
+        <a class="brand" href="#">Tweet Clock</a>
+        <button {{action addTweet}} class="btn btn-success pull-right">Add Tweet</button>
+      </div>
+    </div>
+  </div>
+
+  {{#each tweet in controller itemController=tweetItem}}
+    {{#unless tweet.isLoading}}
+      <div class="tweet">
+        <h2>{{humanDate}}</h2>
+
+        <div class="row">
+          <div class="span6">
+            {{view TweetPoster.TweetTextArea valueBinding="tweet.text" disabledBinding="tweet.isDisabled"}}
+            {{view TweetPoster.CharacterCountdown countBinding="tweet.remainingCharacters"}}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span3">
+          <div class="input-prepend">
+              <span class="add-on"><i class="icon-calendar"></i></span>
+              {{view TweetPoster.DatePicker dateBinding="tweet.date" disabledBinding="tweet.isDisabled"}}
+            </div>
+          </div>
+
+          <div class="span9">
+            {{#each time in tweet.times itemController=timeItem}}
+              {{#unless time.isNew}}
+                <div>
+                  {{view TweetPoster.HourSelect valueBinding=time.hour disabledBinding=tweet.isDisabled}}
+                  {{view TweetPoster.MinuteSelect valueBinding=time.minute disabledBinding=tweet.isDisabled}}
+                  {{view TweetPoster.AmPmSelect valueBinding=time.meridian disabledBinding=tweet.isDisabled}}
+                  {{view TweetPoster.TimeZoneSelect valueBinding=time.offset disabledBinding=tweet.isDisabled}}
+
+                  <button {{action 'removeTime' tweet time}} {{bindAttr disabled="tweet.isDisabled"}} class="btn delete-time"><i class="icon-remove"></i></button>
+                </div>
+              {{/unless}}
+            {{/each}}
+
+            <button {{action 'addTime' tweet}} {{bindAttr disabled="tweet.isDisabled"}} class="btn">Add Another Time</button>
+          </div>
+        </div>
+      </div>
+    {{/unless}}
+  {{else}}
+    <div class="alert alert-info empty">
+      <p><strong>Heads Up!</strong> You don't have any tweets right now.</p>
+      <p>Clicked the green button at the top right to get started.</p>
+    </div>
+  {{/each}}
+</div>
