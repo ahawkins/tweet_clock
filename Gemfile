@@ -5,7 +5,6 @@ gem 'rails', '3.2.13'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
 gem 'active_model_serializers', "~> 0.8.0"
 
 # Gems used only for assets and not required
@@ -28,17 +27,6 @@ gem 'ember-rails'
 gem 'ember-source', '1.0.0.rc4' # or the version you need
 gem 'handlebars-source', '1.0.0.rc4' # or the version you need
 
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
-
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano'
-
-# To use debugger
-# gem 'debugger'
+group :development, :test do
+  gem 'sqlite3'
+end
