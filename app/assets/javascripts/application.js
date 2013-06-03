@@ -16,7 +16,6 @@
 //= require handlebars
 //= require ember
 //= require ember-data
-//= require moment
 //= require_self
 //= require tweet_poster
 TweetPoster = Ember.Application.create({
