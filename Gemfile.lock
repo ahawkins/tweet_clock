@@ -70,6 +70,7 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.23)
     multi_json (1.7.4)
+    pg (0.14.0)
     polyglot (0.3.3)
     rack (1.4.5)
     rack-cache (1.2)
@@ -131,6 +132,7 @@ DEPENDENCIES
   ember-source (= 1.0.0.rc4)
   handlebars-source (= 1.0.0.rc4)
   jquery-rails
+  pg
   rails (= 3.2.13)
   sass-rails (~> 3.2.3)
   sqlite3
