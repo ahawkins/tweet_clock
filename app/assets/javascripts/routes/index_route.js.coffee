@@ -1,12 +1,12 @@
-TweetPoster.ApplicationRoute = Ember.Route.extend
+TweetClock.ApplicationRoute = Ember.Route.extend
   setupController: (controller, model) ->
     # not sure where else to put this
-    TweetPoster.Tweet.find()
+    TweetClock.Tweet.find()
 
-TweetPoster.IndexRoute = Ember.Route.extend
+TweetClock.IndexRoute = Ember.Route.extend
   redirect: -> @transitionTo 'tweets'
 
-TweetPoster.TweetsRoute = Ember.Route.extend
+TweetClock.TweetsRoute = Ember.Route.extend
   events:
     addTime: (tweet) ->
       tweet.get('times').createRecord 
@@ -24,7 +24,7 @@ TweetPoster.TweetsRoute = Ember.Route.extend
     addTweet: ->
       transaction = @get('store').transaction()
 
-      tweet = TweetPoster.Tweet.createRecord date: new Date()
+      tweet = TweetClock.Tweet.createRecord date: new Date()
       tweet.get('times').createRecord 
         date: tweet.get('date')
         hour: 1 
@@ -36,4 +36,4 @@ TweetPoster.TweetsRoute = Ember.Route.extend
       transaction.commit()
 
   model: ->
-    TweetPoster.Tweet.all()
+    TweetClock.Tweet.all()

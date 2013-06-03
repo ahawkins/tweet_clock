@@ -1,4 +1,4 @@
-TweetPoster::Application.routes.draw do
+TweetClock::Application.routes.draw do
   resources :tweets
 
 

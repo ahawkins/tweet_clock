@@ -6,13 +6,13 @@ FixedSelect = Ember.Select.extend
     this.on("didInsertElement", this, this._triggerChange)
     this.on("change", this, this._change)
 
-TweetPoster.HourSelect = FixedSelect.extend
+TweetClock.HourSelect = FixedSelect.extend
   content: [1..12]
 
-TweetPoster.MinuteSelect = FixedSelect.extend
+TweetClock.MinuteSelect = FixedSelect.extend
   content: [0..59]
 
-TweetPoster.TimeZoneSelect = FixedSelect.extend
+TweetClock.TimeZoneSelect = FixedSelect.extend
   content: [
     Ember.Object.create name: 'PST', offset: -8
     Ember.Object.create name: 'EST', offset: -5
@@ -23,10 +23,10 @@ TweetPoster.TimeZoneSelect = FixedSelect.extend
   optionValuePath: 'content.offset'
   optionLabelPath: 'content.name'
 
-TweetPoster.AmPmSelect = Ember.Select.extend
+TweetClock.AmPmSelect = Ember.Select.extend
   content: ['AM', 'PM']
 
-TweetPoster.CharacterCountdown = Ember.View.extend
+TweetClock.CharacterCountdown = Ember.View.extend
   tagName: 'p'
 
   classNameBindings: ['counterClass']

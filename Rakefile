@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-TweetPoster::Application.load_tasks
+TweetClock::Application.load_tasks

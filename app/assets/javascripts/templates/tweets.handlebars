@@ -15,8 +15,8 @@
 
         <div class="row">
           <div class="span6">
-            {{view TweetPoster.TweetTextArea valueBinding="tweet.text" disabledBinding="tweet.isDisabled"}}
-            {{view TweetPoster.CharacterCountdown countBinding="tweet.remainingCharacters"}}
+            {{view TweetClock.TweetTextArea valueBinding="tweet.text" disabledBinding="tweet.isDisabled"}}
+            {{view TweetClock.CharacterCountdown countBinding="tweet.remainingCharacters"}}
           </div>
         </div>
 
@@ -24,7 +24,7 @@
           <div class="span3">
           <div class="input-prepend">
               <span class="add-on"><i class="icon-calendar"></i></span>
-              {{view TweetPoster.DatePicker dateBinding="tweet.date" disabledBinding="tweet.isDisabled"}}
+              {{view TweetClock.DatePicker dateBinding="tweet.date" disabledBinding="tweet.isDisabled"}}
             </div>
           </div>
 
@@ -32,10 +32,10 @@
             {{#each time in tweet.times itemController=timeItem}}
               {{#unless time.isNew}}
                 <div>
-                  {{view TweetPoster.HourSelect valueBinding=time.hour disabledBinding=tweet.isDisabled}}
-                  {{view TweetPoster.MinuteSelect valueBinding=time.minute disabledBinding=tweet.isDisabled}}
-                  {{view TweetPoster.AmPmSelect valueBinding=time.meridian disabledBinding=tweet.isDisabled}}
-                  {{view TweetPoster.TimeZoneSelect valueBinding=time.offset disabledBinding=tweet.isDisabled}}
+                  {{view TweetClock.HourSelect valueBinding=time.hour disabledBinding=tweet.isDisabled}}
+                  {{view TweetClock.MinuteSelect valueBinding=time.minute disabledBinding=tweet.isDisabled}}
+                  {{view TweetClock.AmPmSelect valueBinding=time.meridian disabledBinding=tweet.isDisabled}}
+                  {{view TweetClock.TimeZoneSelect valueBinding=time.offset disabledBinding=tweet.isDisabled}}
 
                   <button {{action 'removeTime' tweet time}} {{bindAttr disabled="tweet.isDisabled"}} class="btn delete-time"><i class="icon-remove"></i></button>
                 </div>

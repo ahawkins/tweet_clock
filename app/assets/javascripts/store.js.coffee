@@ -1,14 +1,14 @@
-TweetPoster.FixtureAdapter = DS.FixtureAdapter.extend()
+TweetClock.FixtureAdapter = DS.FixtureAdapter.extend()
 
-TweetPoster.RESTSerializer = DS.RESTSerializer.extend
+TweetClock.RESTSerializer = DS.RESTSerializer.extend
   serialize: (record, options) ->
-    if(record instanceof TweetPoster.Time) 
+    if(record instanceof TweetClock.Time) 
       @serializeTime(record)
     else
       @_super record, options
 
   extractRecordRepresentation: (loader, type, data, shouldSideload) ->
-    data = @extractTime(data) if type == TweetPoster.Time
+    data = @extractTime(data) if type == TweetClock.Time
     @_super.apply this, arguments
 
   extractTime: (string) ->
@@ -69,16 +69,16 @@ TweetPoster.RESTSerializer = DS.RESTSerializer.extend
 
     "%@-%@-%@T%@:%@:00%@:00".fmt year, month, day, hour, minute, zone
 
-TweetPoster.RESTAdapter = DS.RESTAdapter.extend
-  serializer: TweetPoster.RESTSerializer
+TweetClock.RESTAdapter = DS.RESTAdapter.extend
+  serializer: TweetClock.RESTSerializer
 
-TweetPoster.RESTAdapter.map TweetPoster.Tweet,
+TweetClock.RESTAdapter.map TweetClock.Tweet,
   times: { embedded: 'always' }
 
-TweetPoster.Store = DS.Store.extend
-  adapter: TweetPoster.RESTAdapter
+TweetClock.Store = DS.Store.extend
+  adapter: TweetClock.RESTAdapter
 
-TweetPoster.Tweet.FIXTURES = [
+TweetClock.Tweet.FIXTURES = [
   {
     id: '1',
     text: 'tweet 1',
@@ -101,7 +101,7 @@ TweetPoster.Tweet.FIXTURES = [
   }
 ]
 
-TweetPoster.Time.FIXTURES = [
+TweetClock.Time.FIXTURES = [
   { id: '1', hour: 9, minute: 30, meridian: 'AM', offset: -8 }
   { id: '2', hour: 8, minute: 15, meridian: 'PM', offset: 0 }
   { id: '3', hour: 9, minute: 30, meridian: 'AM', offset: -8 }

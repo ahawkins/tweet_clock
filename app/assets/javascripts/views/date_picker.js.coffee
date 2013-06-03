@@ -1,4 +1,4 @@
-TweetPoster.DatePicker = Ember.TextField.extend
+TweetClock.DatePicker = Ember.TextField.extend
   classNames: ['date-picker']
 
   textToDateTransform: ((key, value) ->

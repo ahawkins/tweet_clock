@@ -1,5 +1,5 @@
-TweetPoster.Router.map ->
+TweetClock.Router.map ->
   @route 'tweets'
 
-TweetPoster.Router.reopen
+TweetClock.Router.reopen
   location: 'none'

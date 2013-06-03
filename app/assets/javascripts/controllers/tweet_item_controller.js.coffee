@@ -1,4 +1,4 @@
-TweetPoster.TweetItemController = Ember.ObjectController.extend
+TweetClock.TweetItemController = Ember.ObjectController.extend
   isDisabled: Ember.computed.alias('isSaving', readOnly: true)
 
   finishedChangingText: ->

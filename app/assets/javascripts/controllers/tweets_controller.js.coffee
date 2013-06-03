@@ -1,2 +1,2 @@
-TweetPoster.TweetsController = Ember.ArrayController.extend
+TweetClock.TweetsController = Ember.ArrayController.extend
   sortProperties: ['date']

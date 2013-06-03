@@ -1,4 +1,4 @@
-TweetPoster.TimeItemController = Ember.ObjectController.extend
+TweetClock.TimeItemController = Ember.ObjectController.extend
   didBecomeDirty: (->
     @get('store').commit()
   ).observes('hour', 'minute', 'meridian', 'offset')

@@ -18,7 +18,7 @@
 //= require ember-data
 //= require_self
 //= require tweet_poster
-TweetPoster = Ember.Application.create({
+TweetClock = Ember.Application.create({
   rootElement: "#application",
   customEvents: {
     blur: 'blur'
