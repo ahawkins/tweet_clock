@@ -17,6 +17,7 @@ gem 'ember-source', '1.0.0.rc4' # or the version you need
 gem 'handlebars-source', '1.0.0.rc4' # or the version you need
 
 gem 'omniauth'
+gem 'omniauth-twitter'
 
 group :development, :test do
   gem 'sqlite3'
