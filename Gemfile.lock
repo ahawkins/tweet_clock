@@ -58,6 +58,7 @@ GEM
     execjs (1.4.0)
       multi_json (~> 1.0)
     handlebars-source (1.0.0.rc4)
+    hashie (1.2.0)
     hike (1.2.2)
     i18n (0.6.1)
     journey (1.0.4)
@@ -71,6 +72,9 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.23)
     multi_json (1.7.4)
+    omniauth (1.1.0)
+      hashie (~> 1.2)
+      rack
     pg (0.14.0)
     polyglot (0.3.3)
     rack (1.4.5)
@@ -137,6 +141,7 @@ DEPENDENCIES
   ember-source (= 1.0.0.rc4)
   handlebars-source (= 1.0.0.rc4)
   jquery-rails
+  omniauth
   pg
   rails (= 3.2.13)
   sass-rails (~> 3.2.3)

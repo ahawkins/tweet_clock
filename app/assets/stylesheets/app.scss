@@ -1,0 +1,32 @@
+body {
+  padding-top: 60px;
+  padding-bottom: 130px;
+}
+
+.navbar-padded { 
+  padding: 0 20px;
+}
+
+.tweet select {
+  width: auto;
+}
+
+.tweet textarea {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* simply cuz I don't care to do it right */
+.tweet .delete-time {
+  position: relative;
+  top: -5px;
+}
+
+.date-picker {
+  width: auto;
+}
+
+.empty { 
+  width: 400px;
+  margin: 0 auto;
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TweetClock</title>
+  <%= stylesheet_link_tag "application", :media => "all" %>
+  <%= yield :javascripts %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<%= yield %>
+
+
+<div class="container-narrow">
+  <hr />
+
+  <footer>
+    <p class="text-center">
+    Proudly made with <a href="http://www.emberjs.com">Ember</a> by <a href="http://broadcastingadam.com">Adam Hawkins</a>. 
+    Get the <a href="http://github.com/ahawkins/tweet_clock">Source</a>.
+    </p>
+  </footer>
+</div>
+
+<script type="text/javascript">
+  var _gauges = _gauges || [];
+  (function() {
+    var t   = document.createElement('script');
+    t.type  = 'text/javascript';
+    t.async = true;
+    t.id    = 'gauges-tracker';
+    t.setAttribute('data-site-id', '51ad88db108d7b1a7e00001a');
+    t.src = '//secure.gaug.es/track.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(t, s);
+  })();
+</script>
+
+</body>
+</html>

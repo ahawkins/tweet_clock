@@ -60,5 +60,7 @@ module TweetClock
     config.assets.version = '1.0'
 
     config.assets.initialize_on_precompile = false
+
+    config.ember.variant = :development
   end
 end
