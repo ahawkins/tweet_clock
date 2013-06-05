@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
       user.uid = auth["uid"]
       user.name = auth["info"]["nickname"]
       user.access_token = auth['credentials']['token']
-      user.access_secret = auth['credentials']['secret']
+      user.secret_token = auth['credentials']['secret']
     end
   end
 end
