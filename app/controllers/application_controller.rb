@@ -9,5 +9,9 @@ class ApplicationController < ActionController::Base
     session[:user_id] = user.id
   end
 
+  def authenticate!
+    head :unauthorized unless current_user
+  end
+
   helper_method :current_user
 end

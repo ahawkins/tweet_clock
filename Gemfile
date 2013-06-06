@@ -18,6 +18,7 @@ gem 'handlebars-source', '1.0.0.rc4' # or the version you need
 
 gem 'omniauth'
 gem 'omniauth-twitter'
+gem 'twitter'
 
 group :development, :test do
   gem 'sqlite3'

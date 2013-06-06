@@ -3,10 +3,6 @@ class TweetsController < ApplicationController
 
   delegate :tweets, to: :current_user
 
-  def authenticate!
-    head :unauthorized unless current_user
-  end
-
   def index
     @tweets = tweets.all
 

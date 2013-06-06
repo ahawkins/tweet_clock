@@ -11,6 +11,14 @@
     </div>
   </div>
 
+  <div class="row profile">
+    <div class="span6">
+      <img {{bindAttr src="profile.avatar"}} class="img-polaroid pull-left" />
+      <h1>{{profile.name}} <small>@{{profile.handle}}</small> </h1>
+      <h6>{{profile.description}}</h6>
+    </div>
+  </div>
+
   {{#each tweet in controller itemController=tweetItem}}
     {{#unless tweet.isLoading}}
       <div class="tweet">
