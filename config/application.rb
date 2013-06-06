@@ -62,5 +62,7 @@ module TweetClock
     config.assets.initialize_on_precompile = false
 
     config.ember.variant = :development
+
+    config.middleware.delete Rack::ETag
   end
 end
