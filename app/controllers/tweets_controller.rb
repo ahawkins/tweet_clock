@@ -4,10 +4,12 @@ class TweetsController < ApplicationController
   delegate :tweets, to: :current_user
 
   def index
-    @tweets = tweets.all
+    @tweets = tweets
 
-    respond_to do |format|
-      format.json { render json: @tweets }
+    if stale? :last_modified => @tweets.maximum(:updated_at)
+      respond_to do |format|
+        format.json { render json: @tweets }
+      end
     end
   end
 
