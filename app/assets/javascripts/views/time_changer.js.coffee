@@ -9,8 +9,11 @@ FixedSelect = Ember.Select.extend
 TweetClock.HourSelect = FixedSelect.extend
   content: [1..12]
 
+# Heroku only allows tasks to run every 10 minutes for free
+# so, only allow users to select at 10 minute invervals
 TweetClock.MinuteSelect = FixedSelect.extend
-  content: [0..59]
+  content: [0..59].filter (i) ->
+    i % 10 == 0
 
 TweetClock.TimeZoneSelect = FixedSelect.extend
   content: [
@@ -25,21 +28,3 @@ TweetClock.TimeZoneSelect = FixedSelect.extend
 
 TweetClock.AmPmSelect = Ember.Select.extend
   content: ['AM', 'PM']
-
-TweetClock.CharacterCountdown = Ember.View.extend
-  tagName: 'p'
-
-  classNameBindings: ['counterClass']
-
-  counterClass: (->
-    count = @get('count')
-
-    switch
-      when count < 20 then 'text-error'
-      when count < 60 then 'text-warning'
-      else 'muted'
-  ).property('count')
-
-  template: Ember.Handlebars.compile """
-    {{view.count}} characters remaining
-  """
