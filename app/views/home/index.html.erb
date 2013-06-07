@@ -1,16 +1,9 @@
-<% if current_user %>
-  <%= link_to 'Signout', signout_path %>
-<% end %>
-
 <div class="container-narrow">
   <div class="masthead">
     <ul class="nav nav-pills pull-right">
       <% if current_user %>
         <li><%= link_to 'App', app_path %></li>
-      <% end %>
-
-      <% if Rails.env.development? %>
-        <li><%= link_to 'Backdoor', '/auth/developer' %></li>
+        <li><%= link_to 'Logout', signout_path %></li>
       <% end %>
 
       <li><a href="#">About</a></li>
@@ -21,38 +14,22 @@
   <hr>
 
   <div class="jumbotron">
+    <% if flash[:failure] %>
+      <div class="alert alert-block">
+        <h4>Uh Oh! Sign in failed!</h4>
+        <%= flash[:failure] %>
+      </div>
+    <% end %>
+
     <h1>Tweet at Exactly the Right Time</h1>
     <p class="lead">Have an announcement and followers around the world? Use this app to create a queue of tweets and send them out at the right time in any time zone.</p>
+
     <% if current_user %>
-      <%= link_to 'Go to App', app_path, class: 'btn btn-large btn=success' %>
+      <%= link_to 'Go to App', app_path, class: 'btn btn-large btn-success' %>
     <% else %>
-      <%= link_to 'Sign Up Today', signup_path, class: "btn btn-large btn-success" %>
+      <%= link_to 'Go to App', signup_path, class: "btn btn-large btn-success" %>
     <% end %>
   </div>
 
   <hr>
-
-  <div class="row-fluid marketing">
-    <div class="span6">
-      <h4>Subheading</h4>
-      <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-      <h4>Subheading</h4>
-      <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-      <h4>Subheading</h4>
-      <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
-    </div>
-
-    <div class="span6">
-      <h4>Subheading</h4>
-      <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-      <h4>Subheading</h4>
-      <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-      <h4>Subheading</h4>
-      <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
-    </div>
-  </div>
 <div>

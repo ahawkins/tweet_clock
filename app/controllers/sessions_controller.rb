@@ -5,6 +5,11 @@ class SessionsController < ApplicationController
     redirect_to app_path
   end
 
+  def failure
+    flash[:failure] = params[:message]
+    redirect_to root_path
+  end
+
   def destroy
     session[:user_id] = nil
     redirect_to root_path
