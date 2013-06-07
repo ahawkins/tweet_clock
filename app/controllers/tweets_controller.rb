@@ -4,53 +4,40 @@ class TweetsController < ApplicationController
   delegate :tweets, to: :current_user
 
   def index
-    @tweets = tweets
-
-    if stale? :last_modified => @tweets.maximum(:updated_at)
-      respond_to do |format|
-        format.json { render json: @tweets }
-      end
+    if stale? :last_modified => tweets.maximum(:updated_at)
+      json tweets
     end
   end
 
   def show
-    @tweet = tweets.find(params[:id])
-
-    respond_to do |format|
-      format.json { render json: @tweet }
-    end
+    tweet = tweets.find params[:id]
+    json tweet
   end
 
   def create
-    @tweet = tweets.new(params[:tweet])
+    tweet = tweets.new params[:tweet]
 
-    respond_to do |format|
-      if @tweet.save
-        format.json { render json: @tweet, status: :created, location: @tweet }
-      else
-        format.json { render json: @tweet.errors, status: :unprocessable_entity }
-      end
+    if tweet.save
+      json tweet, status: :created, location: tweet
+    else
+      json tweet.errors, status: :unprocessable_entitty
     end
   end
 
   def update
-    @tweet = tweets.find(params[:id])
+    tweet = tweets.find params[:id]
 
-    respond_to do |format|
-      if @tweet.update_attributes(params[:tweet])
-        format.json { head :no_content }
-      else
-        format.json { render json: @tweet.errors, status: :unprocessable_entity }
-      end
+    if tweet.update_attributes params[:tweet]
+      head :no_content
+    else
+      json tweet.errors, status: :unprocessable_entitty
     end
   end
 
   def destroy
-    @tweet = tweets.find(params[:id])
-    @tweet.destroy
+    tweet = tweets.find(params[:id])
+    tweet.destroy
 
-    respond_to do |format|
-      format.json { head :no_content }
-    end
+    head :no_content
   end
 end
