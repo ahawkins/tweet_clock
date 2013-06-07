@@ -75,6 +75,12 @@ TweetClock.RESTAdapter = DS.RESTAdapter.extend
 TweetClock.RESTAdapter.map TweetClock.Tweet,
   times: { embedded: 'always' }
 
+TweetClock.RESTAdapter.map TweetClock.Settings,
+  defaultTimes: { embedded: 'always' }
+
+TweetClock.RESTAdapter.configure 'plurals', 
+  settings: 'settings'
+
 TweetClock.Store = DS.Store.extend
   adapter: TweetClock.RESTAdapter
 

@@ -1,8 +1,6 @@
 class Tweet < ActiveRecord::Base
   delegate :access_token, :secret_token, to: :user
 
-  attr_accessible :text, :times
-
   scope :tweetable, -> { where(sent: false).order("time ASC") }
 
   validates! :text, length: { maximum: 140 }

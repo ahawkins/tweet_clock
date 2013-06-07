@@ -7,6 +7,10 @@ class TweetsController < ApplicationController
 
   delegate :tweets, to: :current_user
 
+  def tweet_params
+    params.require(:tweet).permit(:text, :times => [])
+  end
+
   def index
     if stale? :last_modified => tweets.maximum(:updated_at)
       json tweets
@@ -19,7 +23,7 @@ class TweetsController < ApplicationController
   end
 
   def create
-    tweet = tweets.new params[:tweet]
+    tweet = tweets.new tweet_params
 
     if tweet.save
       json tweet, status: :created, location: tweet
@@ -31,7 +35,7 @@ class TweetsController < ApplicationController
   def update
     tweet = tweets.find params[:id]
 
-    if tweet.update_attributes params[:tweet]
+    if tweet.update_attributes tweet_params
       head :no_content
     else
       json tweet.errors, status: :unprocessable_entitty

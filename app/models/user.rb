@@ -3,6 +3,8 @@ require 'digest/sha1'
 class User < ActiveRecord::Base
   # attr_accessible :title, :body
 
+  serialize :settings
+
   has_many :tweets, dependent: :destroy
 
   def self.create_with_omniauth(auth)
@@ -13,5 +15,10 @@ class User < ActiveRecord::Base
       user.access_token = auth['credentials']['token']
       user.secret_token = auth['credentials']['secret']
     end
+  end
+
+  def initialize(*args, &block)
+    super
+    self.settings ||= { }
   end
 end

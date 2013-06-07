@@ -17,10 +17,15 @@ TweetClock.MinuteSelect = FixedSelect.extend
 
 TweetClock.TimeZoneSelect = FixedSelect.extend
   content: [
+    Ember.Object.create name: 'HST', offset: -10
+    Ember.Object.create name: 'AST', offset: -9
     Ember.Object.create name: 'PST', offset: -8
+    Ember.Object.create name: 'MST', offset: -7
+    Ember.Object.create name: 'CST', offset: -6
     Ember.Object.create name: 'EST', offset: -5
     Ember.Object.create name: 'UTC', offset: 0
     Ember.Object.create name: 'CET', offset: 1
+    Ember.Object.create name: 'EET', offset: 2
   ]
 
   optionValuePath: 'content.offset'

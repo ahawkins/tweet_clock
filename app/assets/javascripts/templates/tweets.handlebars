@@ -11,57 +11,81 @@
     </div>
   </div>
 
-  <div class="row profile">
-    <div class="span6">
-      <img {{bindAttr src="profile.avatar"}} class="img-polaroid pull-left" />
-      <h1>{{profile.name}} <small>@{{profile.handle}}</small> </h1>
-      <h6>{{profile.description}}</h6>
+  <div class="row">
+    <div class="span4 sidebar">
+      <div class="well">
+        <h5>Default Times</h5>
+
+        {{#each settings.defaultTimes itemController=defaultTimeItem}}
+          <div>
+            {{view TweetClock.HourSelect valueBinding=hour}}
+            {{view TweetClock.MinuteSelect valueBinding=minute}}
+            {{view TweetClock.AmPmSelect valueBinding=meridian}}
+            {{view TweetClock.TimeZoneSelect valueBinding=offset}}
+            <button {{action 'removeDefaultTime' this}} {{bindAttr disabled="settings.isDisabled"}} class="btn delete-time"><i class="icon-remove"></i></button>
+          </div>
+        {{else}}
+          <p>No defaults yet. Press the button to below to add a defaul time. These times apply to all new tweets.</p>
+        {{/each}}
+
+        <button {{action addDefaultTime}} {{bindAttr disabled="settings.isDirty"}} class="btn">Add Default</button>
+      </div>
     </div>
-  </div>
 
-  {{#each tweet in controller itemController=tweetItem}}
-    {{#unless tweet.isLoading}}
-      <div class="tweet">
-        <h3>{{humanDate}}</h3>
-
-        <div class="row">
-          <div class="span6">
-            {{view TweetClock.TweetTextArea valueBinding="tweet.text" disabledBinding="tweet.isDisabled"}}
-            {{view TweetClock.CharacterCountdown countBinding="tweet.remainingCharacters"}}
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="span3">
-          <div class="input-prepend">
-              <span class="add-on"><i class="icon-calendar"></i></span>
-              {{view TweetClock.DatePicker dateBinding="tweet.date" disabledBinding="tweet.isDisabled"}}
-            </div>
-          </div>
-
-          <div class="span9">
-            {{#each time in tweet.times itemController=timeItem}}
-              {{#unless time.isNew}}
-                <div>
-                  {{view TweetClock.HourSelect valueBinding=time.hour disabledBinding=tweet.isDisabled}}
-                  {{view TweetClock.MinuteSelect valueBinding=time.minute disabledBinding=tweet.isDisabled}}
-                  {{view TweetClock.AmPmSelect valueBinding=time.meridian disabledBinding=tweet.isDisabled}}
-                  {{view TweetClock.TimeZoneSelect valueBinding=time.offset disabledBinding=tweet.isDisabled}}
-
-                  <button {{action 'removeTime' tweet time}} {{bindAttr disabled="tweet.isDisabled"}} class="btn delete-time"><i class="icon-remove"></i></button>
-                </div>
-              {{/unless}}
-            {{/each}}
-
-            <button {{action 'addTime' tweet}} {{bindAttr disabled="tweet.isDisabled"}} class="btn">Add Another Time</button>
-          </div>
+    <div class="span8 main">
+      <div class="row profile">
+        <div class="span6">
+          <img {{bindAttr src="profile.avatar"}} class="img-polaroid pull-left" />
+          <h1>{{profile.name}} <small>@{{profile.handle}}</small> </h1>
+          <h6>{{profile.description}}</h6>
         </div>
       </div>
-    {{/unless}}
-  {{else}}
-    <div class="alert alert-info empty">
-      <p><strong>Heads Up!</strong> You don't have any tweets right now.</p>
-      <p>Clicked the green button at the top right to get started.</p>
+
+      {{#each tweet in controller itemController=tweetItem}}
+        {{#unless tweet.isLoading}}
+          <div class="tweet">
+            <h3>{{humanDate}}</h3>
+
+            <div class="row">
+              <div class="span6">
+                {{view TweetClock.TweetTextArea valueBinding="tweet.text" disabledBinding="tweet.isDisabled"}}
+                {{view TweetClock.CharacterCountdown countBinding="tweet.remainingCharacters"}}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="span3">
+              <div class="input-prepend">
+                  <span class="add-on"><i class="icon-calendar"></i></span>
+                  {{view TweetClock.DatePicker dateBinding="tweet.date" disabledBinding="tweet.isDisabled"}}
+                </div>
+              </div>
+
+              <div class="span3">
+                {{#each time in tweet.times itemController=timeItem}}
+                  {{#unless time.isNew}}
+                    <div>
+                      {{view TweetClock.HourSelect valueBinding=time.hour disabledBinding=tweet.isDisabled}}
+                      {{view TweetClock.MinuteSelect valueBinding=time.minute disabledBinding=tweet.isDisabled}}
+                      {{view TweetClock.AmPmSelect valueBinding=time.meridian disabledBinding=tweet.isDisabled}}
+                      {{view TweetClock.TimeZoneSelect valueBinding=time.offset disabledBinding=tweet.isDisabled}}
+
+                      <button {{action 'removeTime' tweet time}} {{bindAttr disabled="tweet.isDisabled"}} class="btn delete-time"><i class="icon-remove"></i></button>
+                    </div>
+                  {{/unless}}
+                {{/each}}
+
+                <button {{action 'addTime' tweet}} {{bindAttr disabled="tweet.isDisabled"}} class="btn">Add Another Time</button>
+              </div>
+            </div>
+          </div>
+        {{/unless}}
+      {{else}}
+        <div class="alert alert-info empty">
+          <p><strong>Heads Up!</strong> You don't have any tweets right now.</p>
+          <p>Clicked the green button at the top right to get started.</p>
+        </div>
+      {{/each}}
     </div>
-  {{/each}}
+  </div>
 </div>

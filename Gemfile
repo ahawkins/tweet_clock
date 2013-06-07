@@ -20,6 +20,8 @@ gem 'omniauth'
 gem 'omniauth-twitter'
 gem 'twitter'
 
+gem 'strong_parameters'
+
 group :development, :test do
   gem 'sqlite3'
 end
