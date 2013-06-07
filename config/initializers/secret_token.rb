@@ -4,4 +4,9 @@
 # If you change this key, all old signed cookies will become invalid!
 # Make sure the secret is at least 30 characters and all random,
 # no regular words or you'll be exposed to dictionary attacks.
-TweetClock::Application.config.secret_token = '3cae0be6ddd0eb201729ac21d58959a4a5db046229ec97a85afb71858c0007903f80e0b5d31c3dd8fbd5d8744bd7de98a28d52717e9e7b88765a440ed9f68ddf'
+
+# This change is here to wipe the session everytime the server is started.
+# This makes it easier to develop because the database can be wiped while
+# the developer is still logged in. A different secret is used in production
+# to protect the user's oauth tokens
+TweetClock::Application.config.secret_token = Time.now.to_i.to_s * 10

@@ -1,4 +1,8 @@
 class TweetsController < ApplicationController
+  rescue_from ActiveModel::StrictValidationFailed  do
+    head :bad_request
+  end
+
   before_filter :authenticate!
 
   delegate :tweets, to: :current_user
