@@ -38,6 +38,14 @@ TweetClock.TweetsRoute = Ember.Route.extend
       transaction.add(tweet)
       transaction.commit()
 
+    deleteTweet: (tweet) ->
+      # FIXME: I hate jquery animation hacks
+      $("[data-tweet-id=\"#{tweet.get('id')}\"]").fadeOut =>
+        transaction = @store.transaction()
+        tweet.deleteRecord()
+        transaction.add tweet
+        transaction.commit()
+
     addDefaultTime: ->
       settings = @controllerFor('settings').get('model')
       transaction = @get('store').transaction()

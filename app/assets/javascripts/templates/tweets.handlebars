@@ -41,10 +41,10 @@
     <div class="span8 main">
       {{#each tweet in controller itemController=tweetItem}}
         {{#unless tweet.isLoading}}
-          <div class="tweet">
+          <div class="tweet" {{bindAttr data-tweet-id="tweet.id"}}>
             <div class="row">
               <div class="span6">
-                <h3>{{humanDate}}<small><a class="btn-link pull-right delete-tweet">Remove</a></small></h3>
+                <h3>{{humanDate}}<small><a {{action deleteTweet tweet}} class="btn-link pull-right delete-tweet">Remove</a></small></h3>
 
                 {{view TweetClock.TweetTextArea valueBinding="tweet.text" disabledBinding="tweet.isDisabled"}}
                 {{view TweetClock.CharacterCountdown countBinding="tweet.remainingCharacters"}}
