@@ -14,6 +14,12 @@
   <div class="row">
     <div class="span4 sidebar">
       <div class="well">
+        <div class="profile">
+          <img {{bindAttr src="profile.avatar"}} class="img-polaroid pull-left" />
+          <p><big><strong>{{profile.name}}</strong></big><br/>@{{profile.handle}}</p>
+          <h6>{{profile.description}}</h6>
+        </div>
+
         <h5>Default Times</h5>
 
         {{#each settings.defaultTimes itemController=defaultTimeItem}}
@@ -33,21 +39,13 @@
     </div>
 
     <div class="span8 main">
-      <div class="row profile">
-        <div class="span6">
-          <img {{bindAttr src="profile.avatar"}} class="img-polaroid pull-left" />
-          <h1>{{profile.name}} <small>@{{profile.handle}}</small> </h1>
-          <h6>{{profile.description}}</h6>
-        </div>
-      </div>
-
       {{#each tweet in controller itemController=tweetItem}}
         {{#unless tweet.isLoading}}
           <div class="tweet">
-            <h3>{{humanDate}}</h3>
-
             <div class="row">
               <div class="span6">
+                <h3>{{humanDate}}<small><a class="btn-link pull-right delete-tweet">Remove</a></small></h3>
+
                 {{view TweetClock.TweetTextArea valueBinding="tweet.text" disabledBinding="tweet.isDisabled"}}
                 {{view TweetClock.CharacterCountdown countBinding="tweet.remainingCharacters"}}
               </div>

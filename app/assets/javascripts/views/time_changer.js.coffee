@@ -1,21 +1,13 @@
-FixedSelect = Ember.Select.extend
-  init: ->
-    this._super()
-    # FIXME: https://github.com/emberjs/ember.js/issues/2763
-    this.valueDidChange()
-    this.on("didInsertElement", this, this._triggerChange)
-    this.on("change", this, this._change)
-
-TweetClock.HourSelect = FixedSelect.extend
+TweetClock.HourSelect = Ember.Select.extend
   content: [1..12]
 
 # Heroku only allows tasks to run every 10 minutes for free
 # so, only allow users to select at 10 minute invervals
-TweetClock.MinuteSelect = FixedSelect.extend
+TweetClock.MinuteSelect = Ember.Select.extend
   content: [0..59].filter (i) ->
     i % 10 == 0
 
-TweetClock.TimeZoneSelect = FixedSelect.extend
+TweetClock.TimeZoneSelect = Ember.Select.extend
   content: [
     Ember.Object.create name: 'HST', offset: -10
     Ember.Object.create name: 'AST', offset: -9

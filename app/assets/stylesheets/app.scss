@@ -33,8 +33,7 @@ body {
 
 .profile img {
   margin-right: 10px;
-  margin-bottom: 10px;
-  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .profile small {
@@ -46,4 +45,10 @@ body {
   color: #999;
   text-transform: uppercase;
   font-weight: normal;
+  clear: left;
 }
+
+.delete-tweet {
+  margin-top: 14px;
+}
+
