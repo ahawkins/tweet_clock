@@ -27,14 +27,14 @@ ActiveRecord::Schema.define(:version => 20130612173140) do
   add_index "tweets", ["time", "sent"], :name => "index_tweets_on_time_and_sent"
 
   create_table "users", :force => true do |t|
-    t.string   "provider",     :null => false
-    t.string   "uid",          :null => false
-    t.string   "name",         :null => false
-    t.string   "access_token", :null => false
-    t.string   "secret_token", :null => false
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-    t.text     "settings"
+    t.string   "provider",                    :null => false
+    t.string   "uid",                         :null => false
+    t.string   "name",                        :null => false
+    t.string   "access_token",                :null => false
+    t.string   "secret_token",                :null => false
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
+    t.text     "settings",     :limit => 255
   end
 
   add_index "users", ["name"], :name => "index_users_on_name", :unique => true
