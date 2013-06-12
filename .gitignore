@@ -16,3 +16,6 @@
 /public/assets
 /server
 /console
+
+# Ignore development database.yml
+config/database.yml
