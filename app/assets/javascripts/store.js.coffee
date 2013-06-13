@@ -32,7 +32,6 @@ TweetClock.RESTSerializer = DS.RESTSerializer.extend
 
     time.minute = parseInt matches[5]
     time.offset = parseInt matches[6]
-    time
 
     time
 
