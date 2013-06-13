@@ -1,5 +1,5 @@
-// Version: v1.0.0-rc.4-9-ga3b1551
-// Last commit: a3b1551 (2013-05-28 22:01:35 -0400)
+// Version: v1.0.0-rc.5-50-g32ffe87
+// Last commit: 32ffe87 (2013-06-12 21:01:03 -0700)
 
 
 (function() {
@@ -49,7 +49,12 @@ if (!('MANDATORY_SETTER' in Ember.ENV)) {
     falsy, an exception will be thrown.
 */
 Ember.assert = function(desc, test) {
-  if (!test) throw new Error("assertion failed: "+desc);
+  Ember.Logger.assert(test, desc);
+
+  if (Ember.testing && !test) {
+    // when testing, ensure test failures when assertions fail
+    throw new Error("Assertion Failed: " + desc);
+  }
 };
 
 
@@ -151,8 +156,8 @@ Ember.deprecateFunc = function(message, func) {
 
 })();
 
-// Version: v1.0.0-rc.4-9-ga3b1551
-// Last commit: a3b1551 (2013-05-28 22:01:35 -0400)
+// Version: v1.0.0-rc.5-50-g32ffe87
+// Last commit: 32ffe87 (2013-06-12 21:01:03 -0700)
 
 
 (function() {
@@ -219,7 +224,7 @@ var define, requireModule;
 
   @class Ember
   @static
-  @version 1.0.0-rc.4
+  @version 1.0.0-rc.5
 */
 
 if ('undefined' === typeof Ember) {
@@ -246,10 +251,10 @@ Ember.toString = function() { return "Ember"; };
 /**
   @property VERSION
   @type String
-  @default '1.0.0-rc.4'
+  @default '1.0.0-rc.5'
   @final
 */
-Ember.VERSION = '1.0.0-rc.4';
+Ember.VERSION = '1.0.0-rc.5';
 
 /**
   Standard environmental variables. You can define these in a global `ENV`
@@ -364,6 +369,19 @@ function consoleMethod(name) {
   }
 }
 
+function assertPolyfill(test, message) {
+  if (!test) {
+    try {
+      // attempt to preserve the stack
+      throw new Error("assertion failed: " + message);
+    } catch(error) {
+      setTimeout(function(){
+        throw error;
+      }, 0);
+    }
+  }
+}
+
 /**
   Inside Ember-Metal, simply uses the methods from `imports.console`.
   Override this to provide more robust logging functionality.
@@ -376,7 +394,8 @@ Ember.Logger = {
   warn:  consoleMethod('warn')  || Ember.K,
   error: consoleMethod('error') || Ember.K,
   info:  consoleMethod('info')  || Ember.K,
-  debug: consoleMethod('debug') || consoleMethod('info') || Ember.K
+  debug: consoleMethod('debug') || consoleMethod('info') || Ember.K,
+  assert: consoleMethod('assert') || assertPolyfill
 };
 
 
@@ -1644,6 +1663,7 @@ get = function get(obj, keyName) {
     obj = null;
   }
 
+  Ember.assert("Cannot call get with "+ keyName +" key.", !!keyName);
   Ember.assert("Cannot call get with '"+ keyName +"' on an undefined object.", obj !== undefined);
 
   if (obj === null || keyName.indexOf('.') !== -1) {
@@ -2464,6 +2484,8 @@ var set = function set(obj, keyName, value, tolerant) {
     keyName = obj;
     obj = null;
   }
+
+  Ember.assert("Cannot call set with "+ keyName +" key.", !!keyName);
 
   if (!obj || keyName.indexOf('.') !== -1) {
     return setPath(obj, keyName, value, tolerant);
@@ -4758,7 +4780,7 @@ define("backburner",
       },
 
       cancel: function(timer) {
-        if (typeof timer === 'object' && timer.queue && timer.method) { // we're cancelling a deferOnce
+        if (timer && typeof timer === 'object' && timer.queue && timer.method) { // we're cancelling a deferOnce
           return timer.queue.cancel(timer);
         } else if (typeof timer === 'function') { // we're cancelling a setTimeout
           for (var i = 0, l = timers.length; i < l; i += 2) {
@@ -4767,6 +4789,8 @@ define("backburner",
               return true;
             }
           }
+        } else {
+          return; // timer was null or not a timer
         }
       }
     };
@@ -5004,7 +5028,6 @@ define("backburner/queue",
 
     __exports__.Queue = Queue;
   });
-
 })();
 
 
@@ -5439,6 +5462,38 @@ Ember.run.next = function() {
 */
 Ember.run.cancel = function(timer) {
   return backburner.cancel(timer);
+};
+
+/**
+  Execute the passed method in a specified amount of time, reset timer
+  upon additional calls.
+
+  ```javascript
+    var myFunc = function() { console.log(this.name + ' ran.'); };
+    var myContext = {name: 'debounce'};
+
+    Ember.run.debounce(myContext, myFunc, 150);
+
+    // less than 150ms passes
+
+    Ember.run.debounce(myContext, myFunc, 150);
+
+    // 150ms passes
+    // myFunc is invoked with context myContext
+    // console logs 'debounce ran.' one time.
+  ```
+
+  @method debounce
+  @param {Object} [target] target of method to invoke
+  @param {Function|String} method The method to invoke.
+    May be a function or a string. If you pass a string
+    then it will be looked up on the passed target.
+  @param {Object} [args*] Optional arguments to pass to the timeout.
+  @param {Number} wait Number of milliseconds to wait.
+  @return {void}
+*/
+Ember.run.debounce = function() {
+  return backburner.debounce.apply(backburner, arguments);
 };
 
 // Make sure it's not an autorun during testing
@@ -6580,6 +6635,29 @@ Ember.immediateObserver = function() {
 };
 
 /**
+  When observers fire, they are called with the arguments `obj`, `keyName`
+  and `value`. In a typical observer, value is the new, post-change value.
+
+  A `beforeObserver` fires before a property changes. The `value` argument contains
+  the pre-change value.
+
+  A `beforeObserver` is an alternative form of `.observesBefore()`.
+
+  ```javascript
+  App.PersonView = Ember.View.extend({
+    valueWillChange: function (obj, keyName, value) {
+      this.changingFrom = value;
+    }.observesBefore('content.value'),
+    valueDidChange: function(obj, keyName, value) {
+        // only run if updating a value already in the DOM
+        if(this.get('state') === 'inDOM') {
+            var color = value > this.changingFrom ? 'green' : 'red';
+            // logic
+        }
+    }.observes('content.value')
+  });
+  ```
+
   @method beforeObserver
   @for Ember
   @param {Function} func
@@ -9425,15 +9503,15 @@ Ember.Array = Ember.Mixin.create(Ember.Enumerable, /** @scope Ember.Array.protot
     Adds an array observer to the receiving array. The array observer object
     normally must implement two methods:
 
-    * `arrayWillChange(start, removeCount, addCount)` - This method will be
+    * `arrayWillChange(observedObj, start, removeCount, addCount)` - This method will be
       called just before the array is modified.
-    * `arrayDidChange(start, removeCount, addCount)` - This method will be
+    * `arrayDidChange(observedObj, start, removeCount, addCount)` - This method will be
       called just after the array is modified.
 
-    Both callbacks will be passed the starting index of the change as well a
-    a count of the items to be removed and added. You can use these callbacks
-    to optionally inspect the array during the change, clear caches, or do
-    any other bookkeeping necessary.
+    Both callbacks will be passed the observed object, starting index of the
+    change as well a a count of the items to be removed and added. You can use
+    these callbacks to optionally inspect the array during the change, clear
+    caches, or do any other bookkeeping necessary.
 
     In addition to passing a target, you can also include an options hash
     which you can use to override the method names that will be invoked on the
@@ -14588,6 +14666,47 @@ var get = Ember.get, set = Ember.set, fmt = Ember.String.fmt;
 Ember.EventDispatcher = Ember.Object.extend(/** @scope Ember.EventDispatcher.prototype */{
 
   /**
+    The set of events names (and associated handler function names) to be setup
+    and dispatched by the `EventDispatcher`. Custom events can added to this list at setup
+    time, generally via the `Ember.Application.customEvents` hash. Only override this
+    default set to prevent the EventDispatcher from listening on some events all together.
+
+    This set will be modified by `setup` to also include any events added at that time.
+
+    @property events
+    @type Object
+  */
+  events: {
+    touchstart  : 'touchStart',
+    touchmove   : 'touchMove',
+    touchend    : 'touchEnd',
+    touchcancel : 'touchCancel',
+    keydown     : 'keyDown',
+    keyup       : 'keyUp',
+    keypress    : 'keyPress',
+    mousedown   : 'mouseDown',
+    mouseup     : 'mouseUp',
+    contextmenu : 'contextMenu',
+    click       : 'click',
+    dblclick    : 'doubleClick',
+    mousemove   : 'mouseMove',
+    focusin     : 'focusIn',
+    focusout    : 'focusOut',
+    mouseenter  : 'mouseEnter',
+    mouseleave  : 'mouseLeave',
+    submit      : 'submit',
+    input       : 'input',
+    change      : 'change',
+    dragstart   : 'dragStart',
+    drag        : 'drag',
+    dragenter   : 'dragEnter',
+    dragleave   : 'dragLeave',
+    dragover    : 'dragOver',
+    drop        : 'drop',
+    dragend     : 'dragEnd'
+  },
+
+  /**
     @private
 
     The root DOM element to which event listeners should be attached. Event
@@ -14618,35 +14737,7 @@ Ember.EventDispatcher = Ember.Object.extend(/** @scope Ember.EventDispatcher.pro
     @param addedEvents {Hash}
   */
   setup: function(addedEvents, rootElement) {
-    var event, events = {
-      touchstart  : 'touchStart',
-      touchmove   : 'touchMove',
-      touchend    : 'touchEnd',
-      touchcancel : 'touchCancel',
-      keydown     : 'keyDown',
-      keyup       : 'keyUp',
-      keypress    : 'keyPress',
-      mousedown   : 'mouseDown',
-      mouseup     : 'mouseUp',
-      contextmenu : 'contextMenu',
-      click       : 'click',
-      dblclick    : 'doubleClick',
-      mousemove   : 'mouseMove',
-      focusin     : 'focusIn',
-      focusout    : 'focusOut',
-      mouseenter  : 'mouseEnter',
-      mouseleave  : 'mouseLeave',
-      submit      : 'submit',
-      input       : 'input',
-      change      : 'change',
-      dragstart   : 'dragStart',
-      drag        : 'drag',
-      dragenter   : 'dragEnter',
-      dragleave   : 'dragLeave',
-      dragover    : 'dragOver',
-      drop        : 'drop',
-      dragend     : 'dragEnd'
-    };
+    var event, events = get(this, 'events');
 
     Ember.$.extend(events, addedEvents || {});
 
@@ -14892,6 +14983,15 @@ Ember.warn("The VIEW_PRESERVES_CONTEXT flag has been removed and the functionali
   @type Hash
 */
 Ember.TEMPLATES = {};
+
+/**
+  `Ember.CoreView` is
+
+  @class CoreView
+  @namespace Ember
+  @extends Ember.Object
+  @uses Ember.Evented
+*/
 
 Ember.CoreView = Ember.Object.extend(Ember.Evented, {
   isView: true,
@@ -15650,8 +15750,7 @@ class:
 
   @class View
   @namespace Ember
-  @extends Ember.Object
-  @uses Ember.Evented
+  @extends Ember.CoreView
 */
 Ember.View = Ember.CoreView.extend(
 /** @scope Ember.View.prototype */ {
@@ -15832,7 +15931,7 @@ Ember.View = Ember.CoreView.extend(
     If a value that affects template rendering changes, the view should be
     re-rendered to reflect the new value.
 
-    @method _displayPropertyDidChange
+    @method _contextDidChange
   */
   _contextDidChange: Ember.observer(function() {
     this.rerender();
@@ -16916,31 +17015,32 @@ Ember.View = Ember.CoreView.extend(
     @return {Ember.View} new instance
   */
   createChildView: function(view, attrs) {
-    if (view.isView && view._parentView === this) { return view; }
+    if (view.isView && view._parentView === this && view.container === this.container) {
+      return view;
+    }
+
+    attrs = attrs || {};
+    attrs._parentView = this;
+    attrs.container = this.container;
 
     if (Ember.CoreView.detect(view)) {
-      attrs = attrs || {};
-      attrs._parentView = this;
-      attrs.container = this.container;
       attrs.templateData = attrs.templateData || get(this, 'templateData');
 
       view = view.create(attrs);
 
       // don't set the property on a virtual view, as they are invisible to
       // consumers of the view API
-      if (view.viewName) { set(get(this, 'concreteView'), view.viewName, view); }
+      if (view.viewName) {
+        set(get(this, 'concreteView'), view.viewName, view);
+      }
     } else {
       Ember.assert('You must pass instance or subclass of View', view.isView);
 
-      if (attrs) {
-        view.setProperties(attrs);
-      }
+      Ember.setProperties(view, attrs);
 
       if (!get(view, 'templateData')) {
         set(view, 'templateData', get(this, 'templateData'));
       }
-
-      set(view, '_parentView', this);
     }
 
     return view;
@@ -17988,6 +18088,7 @@ Ember.ContainerView = Ember.View.extend(Ember.MutableArray, {
   initializeViews: function(views, parentView, templateData) {
     forEach(views, function(view) {
       set(view, '_parentView', parentView);
+      set(view, 'container', parentView && parentView.container);
 
       if (!get(view, 'templateData')) {
         set(view, 'templateData', templateData);
@@ -18523,7 +18624,6 @@ Ember.ViewTargetActionSupport = Ember.Mixin.create(Ember.TargetActionSupport, {
 
 
 (function() {
-/*globals jQuery*/
 /**
 Ember Views
 
@@ -19048,10 +19148,63 @@ function makeBindings(options) {
   }
 }
 
+/**
+  Register a bound helper or custom view helper.
+
+  ## Simple bound helper example
+
+  ```javascript
+  Ember.Handlebars.helper('capitalize', function(value) {
+    return value.toUpperCase();
+  });
+  ```
+
+  The above bound helper can be used inside of templates as follows:
+
+  ```handlebars
+  {{capitalize name}}
+  ```
+
+  In this case, when the `name` property of the template's context changes,
+  the rendered value of the helper will update to reflect this change.
+
+  For more examples of bound helpers, see documentation for
+  `Ember.Handlebars.registerBoundHelper`.
+
+  ## Custom view helper example
+
+  Assuming a view subclass named `App.CalenderView` were defined, a helper
+  for rendering instances of this view could be registered as follows:
+
+  ```javascript
+  Ember.Handlebars.helper('calendar', App.CalendarView):
+  ```
+
+  The above bound helper can be used inside of templates as follows:
+
+  ```handlebars
+  {{calendar}}
+  ```
+
+  Which is functionally equivalent to:
+
+  ```handlebars
+  {{view App.CalendarView}}
+  ```
+
+  Options in the helper will be passed to the view in exactly the same
+  manner as with the `view` helper.
+
+  @method helper
+  @for Ember.Handlebars
+  @param {String} name
+  @param {Function|Ember.View} function or view class constructor
+  @param {String} dependentKeys*
+*/
 Ember.Handlebars.helper = function(name, value) {
   if (Ember.View.detect(value)) {
     Ember.Handlebars.registerHelper(name, function(options) {
-      Ember.assert("You can only pass attributes as parameters to a application-defined helper", arguments.length < 3);
+      Ember.assert("You can only pass attributes as parameters (not values) to a application-defined helper", arguments.length < 2);
       makeBindings(options);
       return Ember.Handlebars.helpers.view.call(this, value, options);
     });
@@ -19809,7 +19962,7 @@ Ember._MetamorphView = Ember.View.extend(Ember._Metamorph);
 /**
   @class _SimpleMetamorphView
   @namespace Ember
-  @extends Ember.View
+  @extends Ember.CoreView
   @uses Ember._Metamorph
   @private
 */
@@ -24547,7 +24700,7 @@ Ember.Router = Ember.Object.extend({
   location: 'hash',
 
   init: function() {
-    this.router = this.constructor.router;
+    this.router = this.constructor.router || this.constructor.map(Ember.K);
     this._activeViews = {};
     setupLocation(this);
   },
@@ -25352,6 +25505,8 @@ Ember.Route = Ember.Object.extend({
 function parentRoute(route) {
   var handlerInfos = route.router.router.targetHandlerInfos;
 
+  if (!handlerInfos) { return; }
+
   var parent, current;
 
   for (var i=0, l=handlerInfos.length; i<l; i++) {
@@ -26018,8 +26173,12 @@ Ember.onLoad('Ember.Handlebars', function(Handlebars) {
 
     view = container.lookup('view:' + name) || container.lookup('view:default');
 
-    if (controller = options.hash.controller) {
-      controller = container.lookup('controller:' + controller, lookupOptions);
+    var controllerName = options.hash.controller;
+
+    // Look up the controller by name, if provided.
+    if (controllerName) {
+      controller = container.lookup('controller:' + controllerName, lookupOptions);
+      Ember.assert("The controller name you supplied '" + controllerName + "' did not resolve to a controller.", !!controller);
     } else {
       controller = Ember.controllerFor(container, name, context, lookupOptions);
     }
@@ -26266,7 +26425,7 @@ Ember.onLoad('Ember.Handlebars', function(Handlebars) {
 
     Alternatively, a `target` option can be provided to the helper to change
     which object will receive the method call. This option must be a path
-    path to an object, accessible in the current context:
+    to an object, accessible in the current context:
 
     ```handlebars
     <script type="text/x-handlebars" data-template-name='a-template'>
@@ -26568,7 +26727,7 @@ Ember.View.reopen({
   _hasEquivalentView: function(outletName, view) {
     var existingView = get(this, '_outlets.'+outletName);
     return existingView &&
-      existingView.prototype === view.prototype &&
+      existingView.constructor === view.constructor &&
       existingView.get('template') === view.get('template') &&
       existingView.get('context') === view.get('context');
   },
@@ -28087,10 +28246,11 @@ function resolverFor(namespace) {
 }
 
 function normalize(fullName) {
-  var split = fullName.split(':'),
+  var split = fullName.split(':', 2),
       type = split[0],
       name = split[1];
 
+  Ember.assert("Tried to normalize a container name without a colon (:) in it. You probably tried to lookup a name that did not contain a type, a colon, and a name. A proper lookup name would be `view:post`.", split.length === 2);
 
   if (type !== 'template') {
     var result = name;
@@ -28189,6 +28349,8 @@ Ember.ControllerMixin.reopen({
     ```javascript
     this.get('controllers.post'); // instance of App.PostController
     ```
+
+    This is only available for singleton controllers.
 
     @property {Array} needs
     @default []
@@ -29605,7 +29767,7 @@ Ember.Test = {
       chained: false
     };
     thenable.then = function(onSuccess, onFailure) {
-      var self = this, thenPromise, nextPromise;
+      var thenPromise, nextPromise;
       thenable.chained = true;
       thenPromise = promise.then(onSuccess, onFailure);
       // this is to ensure all downstream fulfillment
@@ -29795,8 +29957,8 @@ Ember.Test.onInjectHelpers(function() {
 
 
 function visit(app, url) {
-  Ember.run(app, app.handleURL, url);
   app.__container__.lookup('router:main').location.setURL(url);
+  Ember.run(app, app.handleURL, url);
   return wait(app);
 }
 
@@ -29832,7 +29994,7 @@ function find(app, selector, context) {
 }
 
 function wait(app, value) {
-  var promise, obj = {}, helperName;
+  var promise;
 
   promise = Ember.Test.promise(function(resolve) {
     if (++countAsync === 1) {
@@ -29914,12 +30076,6 @@ helper('wait', wait);
 
 })();
 
-
-})();
-// Version: v1.0.0-rc.4-9-ga3b1551
-// Last commit: a3b1551 (2013-05-28 22:01:35 -0400)
-
-
 (function() {
 /**
 Ember
@@ -29929,3 +30085,5 @@ Ember
 
 })();
 
+
+})();

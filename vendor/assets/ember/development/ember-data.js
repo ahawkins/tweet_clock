@@ -1,5 +1,5 @@
-// Version: v0.13-6-g74df830
-// Last commit: 74df830 (2013-05-28 19:12:31 -0700)
+// Version: v0.13-20-g3316e49
+// Last commit: 3316e49 (2013-06-12 22:34:51 -0400)
 
 
 (function() {
@@ -16,11 +16,18 @@ var define, requireModule;
     if (seen[name]) { return seen[name]; }
     seen[name] = {};
 
-    var mod = registry[name],
-        deps = mod.deps,
-        callback = mod.callback,
-        reified = [],
-        exports;
+    var mod, deps, callback, reified , exports;
+
+    mod = registry[name];
+
+    if (!mod) {
+      throw new Error("Module '" + name + "' not found.");
+    }
+
+    deps = mod.deps;
+    callback = mod.callback;
+    reified = [];
+    exports;
 
     for (var i=0, l=deps.length; i<l; i++) {
       if (deps[i] === 'exports') {
@@ -802,8 +809,6 @@ DS.Transaction = Ember.Object.extend({
     current transaction should not be used again.
   */
   rollback: function() {
-    var store = get(this, 'store');
-
     // Destroy all relationship changes and compute
     // all references affected
     var references = Ember.OrderedSet.create();
@@ -1771,8 +1776,7 @@ DS.Store = Ember.Object.extend(DS._Mappable, {
 
     var unloadedReferences = this.unloadedReferences(references),
         manyArray = this.recordArrayManager.createManyArray(type, Ember.A(references)),
-        loadingRecordArrays = this.loadingRecordArrays,
-        reference, clientId, i, l;
+        reference, i, l;
 
     // Start the decrementing counter on the ManyArray at the number of
     // records we need to load from the adapter
@@ -4488,8 +4492,6 @@ DS.RelationshipChange.prototype = {
 
   /** @private */
   getByReference: function(reference) {
-    var store = this.store;
-
     // return null or undefined if the original reference was null or undefined
     if (!reference) { return reference; }
 
@@ -4797,8 +4799,7 @@ DS.hasMany = function(type, options) {
 };
 
 function clearUnmaterializedHasMany(record, relationship) {
-  var store = get(record, 'store'),
-      data = get(record, 'data').hasMany;
+  var data = get(record, 'data').hasMany;
 
   var references = data[relationship.key];
 
@@ -6211,7 +6212,7 @@ DS.Serializer = Ember.Object.extend({
   deserializeValue: function(value, attributeType) {
     var transform = this.transforms ? this.transforms[attributeType] : null;
 
-    Ember.assert("You tried to use a attribute type (" + attributeType + ") that has not been registered", transform);
+    Ember.assert("You tried to use an attribute type (" + attributeType + ") that has not been registered", transform);
     return transform.deserialize(value);
   },
 
@@ -8450,8 +8451,6 @@ DS.RESTSerializer = DS.JSONSerializer.extend({
 
 
 (function() {
-/*global jQuery*/
-
 /**
   @module data
   @submodule data-adapters
