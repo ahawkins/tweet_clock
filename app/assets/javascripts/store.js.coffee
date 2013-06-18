@@ -28,7 +28,7 @@ TweetClock.RESTSerializer = DS.RESTSerializer.extend
       time.meridian = 'AM'
     else
       time.hour = hour - 12
-      time.merdian = 'PM'
+      time.meridian = 'PM'
 
     time.minute = parseInt matches[5]
     time.offset = parseInt matches[6]
